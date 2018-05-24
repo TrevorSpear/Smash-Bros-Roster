@@ -1,0 +1,25 @@
+<h2>Character Name HERE</h2>
+
+<div id="CharacterMoves">
+    Characters Moves HERE
+</div>
+
+<form style="display: none" id="EditCharacterMoves">
+    <input name="moves" type="text" value="Characters Moves HERE">
+    <input type="button" onclick="hideEditMoves()" value="Cancel">
+    <input value="Submit">
+</form>
+
+<button type="button" onclick="editMoves()">Edit</button>
+
+<script>
+    function editMoves() {
+        document.getElementById("EditCharacterMoves").show();
+        document.getElementById("CharacterMoves").hide();
+    }
+
+    function hideEditMoves() {
+        document.getElementById("EditCharacterMoves").hide();
+        document.getElementById("CharacterMoves").show();
+    }
+</script>
