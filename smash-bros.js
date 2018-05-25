@@ -26,7 +26,7 @@ app.get('/',function(req,res,next){
     var context = {};
 
     mysql.pool.query('SELECT * FROM sbr_users', function(err, rows, fields){
-        
+
         if(err){
             next()
 
@@ -109,32 +109,42 @@ app.get('/roster',function(req,res,next){
     var context = {};
 
     mysql.pool.query('SELECT * FROM sbr_roster', function(err, rows, fields){
+
         if(err){
             next()
+
         }else {
             context.sbr_roster = rows;
+
+            mysql.pool.query('SELECT * FROM sbr_roster_comment', function(err, rows, fields){
+
+                if(err){
+                    next()
+
+                }else {
+                    context.sbr_roster_comment = rows;
+
+                    mysql.pool.query('SELECT * FROM sbr_roster_character', function(err, rows, fields){
+
+                        if(err){
+                            next()
+
+                        }else {
+
+                            context.sbr_roster_character = rows;
+                            res.render('roster', context);
+
+                        }
+                    });
+
+                }
+            });
+
         }
     });
-
-    mysql.pool.query('SELECT * FROM sbr_roster_comment', function(err, rows, fields){
-        if(err){
-            next()
-        }else {
-            context.sbr_roster_comment = rows;
-        }
-    });
-
-    mysql.pool.query('SELECT * FROM sbr_roster_character', function(err, rows, fields){
-        if(err){
-            next()
-        }else {
-            context.sbr_roster_character = rows;
-        }
-    });
-
-    res.render('roster', context);
 
 });
+
 
 
 //Create a roster
@@ -163,10 +173,11 @@ app.post('/roster',function(req,res,next){
 });
 
 
+
 //Edit a roster
 //CHECK THAT THE PERSON DOING THE EDIT IS THE SAME AS THE ONE THAT CREATED IT
 //Not Done - Page Not Done
-app.put('/roster',function(req,res,next){
+app.put('/roster/:id',function(req,res,next){
     if(req.body && req.body.user && req.body.id){
 
         //id (auto_increment)
@@ -179,8 +190,7 @@ app.put('/roster',function(req,res,next){
             if(!err) {
 
                 //Check if user is same as the one that is editing it.
-
-
+                //Do something here
 
                 mysql.pool.query('UPDATE sbr_roster (user) SET user = ' + req.body.user + ') WHERE id=' + req.body.id + '', function (err, rows, fields) {
                     //redirect here
@@ -189,21 +199,6 @@ app.put('/roster',function(req,res,next){
         });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -216,22 +211,28 @@ app.get('/character',function(req,res,next){
     mysql.pool.query('SELECT * FROM sbr_character', function(err, rows, fields){
         if(err){
             next()
+
         }else {
             context.sbr_roster = rows;
+
+            mysql.pool.query('SELECT * FROM sbr_character_comment', function(err, rows, fields){
+
+                if(err){
+                    next()
+
+                }else {
+
+                    context.sbr_roster_comment = rows;
+                    res.render('character', context);
+
+                }
+            });
+
         }
     });
-
-    mysql.pool.query('SELECT * FROM sbr_character_comment', function(err, rows, fields){
-        if(err){
-            next()
-        }else {
-            context.sbr_roster_comment = rows;
-        }
-    });
-
-    res.render('roster', context);
 
 });
+
 
 
 //Create a character
@@ -265,6 +266,7 @@ app.post('/character',function(req,res,next){
 });
 
 
+
 //Edit a roster
 //CHECK THAT THE PERSON DOING THE EDIT IS THE SAME AS THE ONE THAT CREATED IT
 //Not Done - Page Not Done
@@ -280,7 +282,7 @@ app.put('/character',function(req,res,next){
         //rating                                                                -- Don't change
         //number_of_rating                                                      -- Don't change
 
-        //Check if user editing it is same as the creator of the comment. ---------------------
+        //Check if user editing it is same as the creator of the comment. ------ Not Done
         mysql.pool.query('SELECT * FROM users WHERE id=' + req.body.user + '', function(err, rows, fields){
             if(!err) {
                 mysql.pool.query('UPDATE sbr_character (name, picture, description, moves) SET name = ' + req.body.name + ') WHERE id=' + req.body.id + '', function (err, rows, fields) {
@@ -294,22 +296,33 @@ app.put('/character',function(req,res,next){
 
 
 
+//Make a user
+app.post('/user',function(req,res,next){
+    if(req.body && req.body.username && req.body.email && req.body.first_name && req.body.last_name && req.body.password){
+
+        //id (auto_increment)
+        //user (userID) (check if this user exist)
+        //name string
+        //picture (unknown) -------------------------------------------------
+        //description (text)
+        //moves (text)
+        //rating (default this to 0)
+        //number_of_rating (default this to 0)
+
+        //Check if user exist! ----------------------------------------------------
+        mysql.pool.query('SELECT * FROM users WHERE id=' + req.body.user + '', function(err, rows, fields){
+            if(!err) {
+
+                //Insert Data
+                mysql.pool.query('INSERT INTO sbr_character (user, name, picture, description, moves, rating, number_of_rating) VALUES (' + req.body.user + "," + req.body.name + "," + req.body.picture + "," + req.body.description + "," + req.body.moves + ', 0, 0)', function (err, rows, fields) {
+                    //redirect here --------------------
+                });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            }
+        });
+    }
+});
 
 
 
@@ -321,11 +334,15 @@ app.use(function(req,res){
   res.render('404');
 });
 
+
+
 app.use(function(err, req, res, next){
   console.error(err.stack);
   res.status(500);
   res.render('500');
 });
+
+
 
 app.listen(app.get('port'), function(){
   console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
