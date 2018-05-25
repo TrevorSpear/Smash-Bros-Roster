@@ -1,14 +1,13 @@
-<h1>SMASH BROS:</h1>
+<h1>Smash Bros:</h1>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 
-
-
-//USERS
 <h3 style="margin-bottom: 0">sbr_users</h3>
 
-<table class="well table success table-bordered">
+<!-- User -->
+
+<table class="well table table-bordered">
 
     <tr>
         <td>id</td>
@@ -32,12 +31,13 @@
 
 </table>
 
-<br><br>
+<br>
 
+<!-- Roster -->
 
 <h3 style="margin-bottom: 0">sbr_roster</h3>
 
-<table class="well table table-border">
+<table class="well table table-bordered">
 
     <tr>
         <td>id</td>
@@ -59,28 +59,83 @@
 
 </table>
 
-<br><br>
+<br>
 
+<!-- Roster character -->
 
+<h3 style="margin-bottom: 0">sbr_roster_character</h3>
 
-//Comments on the roster
-<h3 style="margin-bottom: 0">sbr_roster</h3>
+<table class="well table table-bordered">
 
-<table class="well table table-border">
+    <tr>
+        <td>roster</td>
+        <td>character</td>
+        <td>ord_num</td>
+    </tr>
+
+    {{#each sbr_roster_character}}
+        <tr>
+            <td>{{roster}}</td>
+            <td>{{character}}</td>
+            <td>{{ord_num}}</td>
+        </tr>
+    {{/each}}
+
+</table>
+
+<br>
+
+<!-- Roster Comment -->
+
+<h3 style="margin-bottom: 0">sbr_roster_comment</h3>
+
+<table class="well table table-bordered">
+
+    <tr>
+        <td>comment</td>
+        <td>user</td>
+        <td>roster</td>
+        <td>creation_date</td>
+    </tr>
+
+    {{#each sbr_roster_comment}}
+        <tr>
+            <td>{{comment}}</td>
+            <td>{{user}}</td>
+            <td>{{roster}}</td>
+            <td>{{creation_date}}</td>
+        </tr>
+    {{/each}}
+
+</table>
+
+<br>
+
+<!-- Characters -->
+
+<h3 style="margin-bottom: 0">sbr_character</h3>
+
+<table class="well table table-bordered">
 
     <tr>
         <td>id</td>
         <td>user</td>
         <td>name</td>
+        <td>picture</td>
+        <td>description</td>
+        <td>moves</td>
         <td>rating</td>
-        <td>number_of_ratings</td>
+        <td>num_of_ratings</td>
     </tr>
 
-    {{#each sbr_roster}}
+    {{#each sbr_character}}
         <tr>
             <td>{{id}}</td>
             <td>{{user}}</td>
             <td>{{name}}</td>
+            <td>{{picture}}</td>
+            <td>{{description}}</td>
+            <td>{{moves}}</td>
             <td>{{rating}}</td>
             <td>{{number_of_ratings}}</td>
         </tr>
@@ -88,63 +143,30 @@
 
 </table>
 
-<br><br>
+<br>
 
+<!-- Character comments -->
 
+<h3 style="margin-bottom: 0">sbr_character_comment</h3>
 
-//Characters
-<h3 style="margin-bottom: 0">sbr_roster</h3>
-
-<table class="well table table-border">
+<table class="well table table-bordered">
 
     <tr>
         <td>id</td>
+        <td>comment</td>
         <td>user</td>
-        <td>name</td>
-        <td>rating</td>
-        <td>number_of_ratings</td>
+        <td>character</td>
+        <td>creation_date</td>
     </tr>
 
-    {{#each sbr_roster}}
+    {{#each sbr_character_comment}}
         <tr>
             <td>{{id}}</td>
+            <td>{{comment}}</td>
             <td>{{user}}</td>
-            <td>{{name}}</td>
-            <td>{{rating}}</td>
-            <td>{{number_of_ratings}}</td>
+            <td>{{character}}</td>
+            <td>{{creation_date}}</td>
         </tr>
     {{/each}}
 
 </table>
-
-<br><br>
-
-//Comments on the characters
-<h3 style="margin-bottom: 0">sbr_roster</h3>
-
-<table class="well table table-border">
-
-    <tr>
-        <td>id</td>
-        <td>user</td>
-        <td>name</td>
-        <td>rating</td>
-        <td>number_of_ratings</td>
-    </tr>
-
-    {{#each sbr_roster}}
-        <tr>
-            <td>{{id}}</td>
-            <td>{{user}}</td>
-            <td>{{name}}</td>
-            <td>{{rating}}</td>
-            <td>{{number_of_ratings}}</td>
-        </tr>
-    {{/each}}
-
-</table>
-
-
-<br><br>
-
-
