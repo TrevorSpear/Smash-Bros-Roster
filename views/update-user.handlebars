@@ -1,0 +1,11 @@
+<html>
+<h3>Update user:</h3>
+
+<form id="update-user" action="/user" method="put">
+
+    Username: <input type="text" name="username" value="{{sbr_users.username}}"><br>
+    Email: <input type="text" name="email" value="{{sbr_users.email}}"><br>
+    First Name: <input type="text" name="first_name" value="{{sbr_users.first_name}}"><br>
+    Last Name: <input type="text" name="last_name" value="{{sbr_users.last_name}}"><br>
+    <button onclick="updateUser({{sbr_users.id}})">Update</button>
+</form>

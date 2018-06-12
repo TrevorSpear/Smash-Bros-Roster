@@ -2,48 +2,52 @@
 <html>
 <head>
 	<title>Smash Bros</title>
-    <style>
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #333333;
-            width: 100%;
-        }
-
-        li {
-
-        }
-
-        li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        li a:hover {
-            background-color: #111;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    {{#each jsscripts}}
+    <script src="/static/{{this}}"></script>
+    {{/each}}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
+<style>
+    .ulclass {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
 
-<!-- Put a nav bar to navigate the pages-->
-<ul >
-    <li ><a style="float: left" href="/">Homes</a></li>
-    <li ><a style="float: left" href="/roster">Roster</a></li>
-    <li ><a style="float: left" href="/character">Character</a></li>
-    <li ><a style="float: right" href="/sign_up">Sign up/in</a></li>
-    <li><a style="float: right" href="">Logout</a></li>
+    .liclass {
+        display: inline-block;
+        float: left;
+    }
 
+    .aclass {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .aclass:hover {
+        background-color: #111;
+    }
+
+</style>
+
+<ul class="ulclass">
+    <li class="liclass"><a class="active aclass" href="/">Home</a></li>
+    <li class="liclass"><a class="active aclass" href="/user">Users</a></li>
+    <li class="liclass"><a class="active aclass" href="/character">Character</a></li>
+    <li class="liclass"><a class="active aclass" href="/roster">Roster</a></li>
+    <li class="liclass"><a class="active aclass" href="/roster/character">Roster-Character</a></li>
 </ul>
-<br>
 
-<body>
+
+<body style="margin-right: 5%;margin-left: 5%;">
 	{{{body}}}
 </body>
-
 </html>

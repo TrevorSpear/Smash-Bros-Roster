@@ -1,14 +1,100 @@
-<h2>Characters</h2>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+<html>
 
-<table>
-    <tr>
-        <td>List all characters with links</td>
-    </tr>
+<h3>Add new character:</h3>
+<form id="addcharacter" action="/character" method="post" class="well">
+    User:
+    <select name="user">
+        {{#each sbr_users}}
+            <option value="{{id}}">{{username}}</option>
+        {{/each}}
+    </select><br>
+
+    Name: <input type="text" name="name"><br>
+    <!--Picture: <input style="display: inline" type="file" name="picture"><br>-->
+    Description: <input type="text" name="description"><br>
+    Move: <input type="text" name="moves"><br>
+
+    <input class="btn" style="padding: 3px" type="submit" value="Submit">
+</form>
+
+<h3>Current Character:</h3>
+<table class="table table-bordered well">
+    <thead>
+    <th>User</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Moves</th>
+    <th>Rating</th>
+    <th>Number of Rating</th>
+    <th></th>
+    <!--<th></th>-->
+    </thead>
+    <tbody>
+    {{#each sbr_character}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{name}}</td>
+            <th>{{description}}</th>
+            <th>{{moves}}</th>
+            <td>{{rating}}</td>
+            <td>{{number_of_ratings}}</td>
+            <td><button class="btn label" onclick="deletecharacter({{id}})">Delete</button></td>
+            <!--<td><a href="/roster/{{id}}">Update</a></td>-->
+        </tr>
+    {{/each}}
+    </tbody>
 </table>
 
-<table>
-    <tr>
-        <td>List all comments about characters here</td>
-    </tr>
+<br><br>
+
+<h3>Add new comment:</h3>
+<form id="addcomment" action="/character/comment" method="post" class="well">
+    User:
+    <select name="user">
+        {{#each sbr_users}}
+            <option value="{{id}}">{{username}}</option>
+        {{/each}}
+    </select><br>
+
+    Comment: <input type="text" name="comment"><br>
+
+    Character:
+    <select name="character">
+        {{#each sbr_character}}
+            <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select><br>
+
+    <input class="btn" style="padding: 3px" type="submit" value="Submit">
+</form>
+
+<h3>Current Character Comments:</h3>
+<table class="table table-bordered well">
+    <thead>
+    <th>User</th>
+    <th>Comment</th>
+    <th>Character</th>
+    <!--<th>Creation Date</th>-->
+    <th></th>
+    <th></th>
+    </thead>
+    <tbody>
+    {{#each sbr_character_comment}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{comment}}</td>
+            <td>{{name}}</td>
+            <!--<td>{{creation_date}}</td>-->
+            <td><button onclick="deletecharactercomment({{comment_id}})">Delete</button></td>
+            <td><a href="/character/comment/{{comment_id}}">Update</a></td>
+        </tr>
+    {{/each}}
+    </tbody>
 </table>
+
+
+
+</html>

@@ -1,149 +1,100 @@
-<h1>SMASH BROS:</h1>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-
-
-
-//USERS
-<h3 style="margin-bottom: 0">sbr_users</h3>
-
-<table class="well table table-border">
-
-    <tr>
-        <td>id</td>
-        <td>username</td>
-        <td>email</td>
-        <td>first_name</td>
-        <td>last_name</td>
-        <td>password_hash</td>
-    </tr>
-
+<html>
+<h3>Add new roster:</h3>
+<form id="addroster" action="/roster" method="post" class="well">
+    User: <select name="user">
     {{#each sbr_users}}
-        <tr>
-            <td>{{id}}</td>
+        <option value="{{id}}">{{username}}</option>
+    {{/each}}
+    </select><br>
+
+    Name: <input type="text" name="name"><br>
+
+    <input type="submit" value="Submit">
+ </form>
+
+
+<h3>Current roster:</h3>
+<table class="well table table-bordered">
+    <thead> 
+        <th>User</th>
+        <th>Name</th>
+        <th>Rating</th>
+        <th>Number of Rating</th>
+        <th></th>
+        <!--<th></th>-->
+    </thead> 
+    <tbody> 
+        {{#each sbr_roster}}
+        <tr> 
             <td>{{username}}</td>
-            <td>{{email}}</td>
-            <td>{{first_name}}</td>
-            <td>{{last_name}}</td>
-            <td>{{password_hash}}</td>
-        </tr>
-    {{/each}}
-
-</table>
-
-<br><br>
-
-
-<h3 style="margin-bottom: 0">sbr_roster</h3>
-
-<table class="well table table-border">
-
-    <tr>
-        <td>id</td>
-        <td>user</td>
-        <td>name</td>
-        <td>rating</td>
-        <td>number_of_ratings</td>
-    </tr>
-
-    {{#each sbr_roster}}
-        <tr>
-            <td>{{id}}</td>
-            <td>{{user}}</td>
             <td>{{name}}</td>
             <td>{{rating}}</td>
             <td>{{number_of_ratings}}</td>
-        </tr>
-    {{/each}}
-
+            <td><button onclick="deleteroster({{id}})">Delete</button></td>
+            <!--<td><a href="">Update</a></td>-->
+        </tr> 
+        {{/each}} 
+    </tbody> 
 </table>
+
 
 <br><br>
 
 
+<h3>Add new comment:</h3>
+<form id="addcomment" action="/roster/comment" method="post" class="well">
+    User:
+    <select name="user">
+        {{#each sbr_users}}
+            <option value="{{id}}">{{username}}</option>
+        {{/each}}
+    </select><br>
 
-//Comments on the roster
-<h3 style="margin-bottom: 0">sbr_roster</h3>
+    Comment: <input type="text" name="comment"><br>
 
-<table class="well table table-border">
+    Roster:
+    <select name="roster">
+        {{#each sbr_roster}}
+            <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select><br>
 
-    <tr>
-        <td>id</td>
-        <td>user</td>
-        <td>name</td>
-        <td>rating</td>
-        <td>number_of_ratings</td>
-    </tr>
+    <input type="submit" value="Submit">
+</form>
 
-    {{#each sbr_roster}}
+<br/>
+<h3>Current Roster Comments:</h3>
+<table class="well table table-bordered">
+    <thead>
+    <th>User</th>
+    <th>Comment</th>
+    <th>Roster</th>
+    <th></th>
+    <th></th>
+    </thead>
+    <tbody>
+    {{#each sbr_roster_comment}}
         <tr>
-            <td>{{id}}</td>
-            <td>{{user}}</td>
+            <td>{{username}}</td>
+            <td>{{comment}}</td>
             <td>{{name}}</td>
-            <td>{{rating}}</td>
-            <td>{{number_of_ratings}}</td>
+            <td><button onclick="deleterostercomment({{comment_id}})">Delete</button></td>
+            <td><a href="/roster/comment/{{comment_id}}">Update</a></td>
         </tr>
     {{/each}}
+    </tbody>
 
-</table>
-
-<br><br>
-
-
-
-//Characters
-<h3 style="margin-bottom: 0">sbr_roster</h3>
-
-<table class="well table table-border">
-
-    <tr>
-        <td>id</td>
-        <td>user</td>
-        <td>name</td>
-        <td>rating</td>
-        <td>number_of_ratings</td>
-    </tr>
-
-    {{#each sbr_roster}}
-        <tr>
-            <td>{{id}}</td>
-            <td>{{user}}</td>
-            <td>{{name}}</td>
-            <td>{{rating}}</td>
-            <td>{{number_of_ratings}}</td>
-        </tr>
-    {{/each}}
-
-</table>
-
-<br><br>
-
-//Comments on the characters
-<h3 style="margin-bottom: 0">sbr_roster</h3>
-
-<table class="well table table-border">
-
-    <tr>
-        <td>id</td>
-        <td>user</td>
-        <td>name</td>
-        <td>rating</td>
-        <td>number_of_ratings</td>
-    </tr>
-
-    {{#each sbr_roster}}
-        <tr>
-            <td>{{id}}</td>
-            <td>{{user}}</td>
-            <td>{{name}}</td>
-            <td>{{rating}}</td>
-            <td>{{number_of_ratings}}</td>
-        </tr>
-    {{/each}}
 
 </table>
 
 
-<br><br>
 
 
+
+
+
+
+</html>

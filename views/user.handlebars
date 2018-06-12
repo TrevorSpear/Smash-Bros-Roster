@@ -1,0 +1,40 @@
+<html>
+<h3>Add new user:</h3>
+<form id="adduser" action="/user" method="post" class="well">
+
+    Username: <input type="text" name="username"><br>
+    Email: <input type="text" name="email"><br>
+    First Name: <input type="text" name="first_name"><br>
+    Last Name: <input type="text" name="last_name"><br>
+    Password: <input type="password" name="password"><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<h3>Current user:</h3>
+<table class="well table table-bordered">
+    <thead>
+    <th>Username</th>
+    <th>Email</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <td>Password Hash</td>
+    <td></td>
+    <td></td>
+    </thead>
+    <tbody>
+    {{#each sbr_users}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{email}}</td>
+            <td>{{first_name}}</td>
+            <td>{{last_name}}</td>
+            <td>{{password_hash}}</td>
+
+            <td><button onclick="deleteuser({{id}})">Delete</button></td>
+            <td><a href="/user/{{id}}">Update</a></td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+</html>

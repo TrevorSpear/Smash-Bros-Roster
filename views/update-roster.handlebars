@@ -1,0 +1,15 @@
+
+<html>
+<h3>Add new roster:</h3>
+<form id="addroster" action="/roster" method="post">
+    User: <select name="user">
+    {{#each sbr_users}}
+        <option value="{{id}}">{{username}}</option>
+    {{/each}}
+</select><br>
+
+    Name: <input type="text" name="name"><br>
+
+    <input type="submit" value="Submit">
+</form>
+</html>

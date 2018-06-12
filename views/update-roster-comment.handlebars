@@ -1,0 +1,24 @@
+<html>
+<h3>Update Comment:</h3>
+<form id="update-roster-comment" action="/roster/comment" method="put">
+    User:
+    <select name="user">
+        {{#each sbr_users}}
+            <option value="{{id}}">{{username}}</option>
+        {{/each}}
+    </select><br>
+
+    Comment: <input type="text" name="comment" value="{{sbr_roster_comment.comment}}"><br>
+
+    Roster:
+    <select name="roster">
+        {{#each sbr_roster}}
+            <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select><br>
+
+    <button onclick="updateRosterComment({{sbr_roster_comment.id}})">Update</button>
+</form>
+
+
+</html>

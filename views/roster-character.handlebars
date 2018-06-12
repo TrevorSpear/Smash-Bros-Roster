@@ -1,0 +1,49 @@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<html>
+<div>
+<h3> Add a Character to a Roster </h3>
+    <form id="add_character_roster" action="/roster/character" method="post" class="well">
+    Roster:
+        <select name='id'>
+            {{#each sbr_roster}}
+              <option value='{{id}}'>{{name}}</option>
+            {{/each}}
+        </select>
+    <br>
+    Character:<br>
+        <select multiple name="character" style="margin-left: 7%">
+            {{#each sbr_character}}
+                <option value="{{id}}">{{name}}</option>
+            {{/each}}
+        </select><br>
+    <input type="button" value="Submit">
+    </form>
+</div>
+<br/>
+<h3> List of Rosters with Characters </h3>
+<table class="table table-bordered well">
+    <thead> 
+        <th>Roster</th>
+        <th>Character</th>
+        <th>Ord num</th>
+        <th></th>
+        <th></th>
+    </thead> 
+    <tbody> 
+        {{#each sbr_roster_character}}
+        <tr> 
+            <td>{{roster_name}}</td>
+            <td>{{character_name}}</td>
+            <td>{{ord_num}}</td>
+            <td><button class="btn label" onclick="deleterostercharacter({{rosterID}}, {{characterID}})">Delete</button></td>
+            <td><a href='#'>Update</a></td>
+        </tr>
+        {{else}}
+        <b> No characters are in the roster. </b>
+        {{/each}} 
+
+    </tbody>
+</table> 
+</html>
