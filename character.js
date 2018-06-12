@@ -66,7 +66,7 @@ module.exports = function(){
                     } else {
                         context.sbr_character = rows;
                         sql = "SELECT sbr_character_comment.id AS comment_id, comment, sbr_character.name, sbr_users.username AS username, sbr_users.id FROM sbr_character_comment ";
-                        sql += "INNER JOIN sbr_character ON sbr_character.id=sbr_character_comment.character ";
+                        sql += "LEFT JOIN sbr_character ON sbr_character.id=sbr_character_comment.character ";
                         sql += "INNER JOIN sbr_users ON sbr_users.id = sbr_character_comment.user";
 
 
@@ -92,7 +92,6 @@ module.exports = function(){
 
 
 
-    /* Display one person for the specific purpose of updating people */
     router.get('/comment/:charactercommentID', function(req, res){
         const charactercommentID = parseInt(req.params.charactercommentID);
         var context = {};
@@ -101,7 +100,7 @@ module.exports = function(){
         context.jsscripts = ["delete.js", "update.js"];
 
         var sql = "SELECT sbr_character_comment.comment, sbr_character_comment.id AS commentID, sbr_character.name AS name, sbr_character.id AS characterID, sbr_users.username AS username, sbr_users.id AS userID FROM sbr_character_comment ";
-        sql += "INNER JOIN sbr_character ON sbr_character.id = sbr_character_comment.character ";
+        sql += "LEFT JOIN sbr_character ON sbr_character.id = sbr_character_comment.character ";
         sql += "INNER JOIN sbr_users ON sbr_users.id = sbr_character_comment.user ";
         sql += "WHERE sbr_character_comment.id = " + charactercommentID;
 
@@ -117,7 +116,18 @@ module.exports = function(){
 
                 console.log(context.sbr_character_comment);
 
-                res.render('update-character-comment', context);
+                mysql.pool.query("SELECT * FROM sbr_character", function (err, rows, fields) {
+
+                    if (err) {
+                        res.render('500');
+
+                    } else {
+
+                        context.sbr_character = rows;
+
+                        res.render('update-character-comment', context);
+                    }
+                });
             }
         });
     });
@@ -130,16 +140,23 @@ module.exports = function(){
     /* Adds a person, redirects to the people page after adding */
     router.put('/comment/:charactercommentID', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "UPDATE sbr_character_comment SET comment=? WHERE id=?";
+        var sql = "UPDATE sbr_character_comment SET sbr_character_comment.comment=?, sbr_character_comment.character=? WHERE id=?";
 
-        var inserts = [req.body.comment, req.params.charactercommentID];
+        var character;
+
+        if (req.body.character === "null"){
+            character = null
+        }else{
+            character = req.body.character;
+        }
+
+        var inserts = [req.body.comment, character, req.params.charactercommentID];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error));
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                console.log("UMM HELLO??????");
                 // res.redirect('/character');
                 res.status(200);
                 res.end();
@@ -169,8 +186,18 @@ module.exports = function(){
 
         var mysql = req.app.get('mysql');
         var sql = "INSERT INTO `sbr_character_comment` (`comment`, `user`, `character`) VALUES (?,?,?)";
+
+        var character;
+
+        if (req.body.character === "null"){
+            character = null
+        }else{
+            character = req.body.character;
+        }
+
+
         // INSERT INTO `sbr_character_comment` (`id`, `comment`, `user`, `character`, `creation_date`) VALUES (NULL, 'something about them memes', '1', '7', CURRENT_TIMESTAMP);
-        var inserts = [req.body.comment, req.body.user, req.body.character];
+        var inserts = [req.body.comment, req.body.user, character];
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
 
             if(error){

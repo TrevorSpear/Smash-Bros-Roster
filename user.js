@@ -73,7 +73,7 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
 
         var sql = "UPDATE sbr_users SET username=?, email=?, first_name=?, last_name=? WHERE id=?";
-        var inserts = [req.body.username, req.body.email, req.body.first_name, req.body.last_name, password_hash, req.params.userID];
+        var inserts = [req.body.username, req.body.email, req.body.first_name, req.body.last_name, req.params.userID];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error);

@@ -42,7 +42,7 @@ module.exports = function(){
 
                     } else {
                         context.sbr_roster = rows;
-                        sql = "SELECT sbr_roster_comment.id AS comment_id, comment, sbr_roster.name, sbr_users.username, sbr_users.id FROM sbr_roster_comment INNER JOIN sbr_roster ON sbr_roster.id=sbr_roster_comment.roster INNER JOIN sbr_users ON sbr_users.id = sbr_roster_comment.user";
+                        sql = "SELECT sbr_roster_comment.id AS comment_id, comment, sbr_roster.name, sbr_users.username, sbr_users.id FROM sbr_roster_comment LEFT JOIN sbr_roster ON sbr_roster.id=sbr_roster_comment.roster INNER JOIN sbr_users ON sbr_users.id = sbr_roster_comment.user";
 
                         // SELECT sbr_roster_comment.id, comment, sbr_roster.name, sbr_users.username, sbr_users.id
                         // FROM sbr_roster_comment
@@ -75,7 +75,7 @@ module.exports = function(){
         var sql;
         context.jsscripts = ["delete.js", "update.js"];
 
-        mysql.pool.query('SELECT * FROM sbr_users', function(err, rows, fields) {
+        mysql.pool.query('SELECT sbr_roster_comment.id AS commentID, sbr_users.username AS username, sbr_roster.name AS name, sbr_roster_comment.comment AS comment, sbr_users.id AS userID FROM sbr_roster_comment INNER JOIN sbr_users ON sbr_users.id = sbr_roster_comment.user LEFT JOIN sbr_roster ON sbr_roster.id = sbr_roster_comment.roster WHERE sbr_roster_comment.id = ?', [rostercommentID], function(err, rows, fields) {
 
             if (err) {
                 console.log(JSON.stringify(err));
@@ -83,7 +83,9 @@ module.exports = function(){
                 res.end();
 
             } else {
-                context.sbr_users = rows;
+                context.sbr_roster_comment = rows[0];
+
+                console.log(rows);
 
                 mysql.pool.query('SELECT * FROM sbr_roster', function (err, rows, fields) {
 
@@ -94,21 +96,8 @@ module.exports = function(){
 
                     } else {
                         context.sbr_roster = rows;
-                        sql = "SELECT * FROM sbr_roster_comment WHERE id=?";
-                        var inserts = [rostercommentID];
 
-                        mysql.pool.query(sql, inserts, function(error, rows, fields) {
-
-                            if (error) {
-                                console.log(JSON.stringify(error));
-                                res.write(JSON.stringify(error));
-                                res.end();
-
-                            } else {
-                                context.sbr_roster_comment = rows[0];
-                                res.render('update-roster-comment', context);
-                            }
-                        });
+                        res.render('update-roster-comment', context);
                     }
                 });
             }
@@ -164,16 +153,29 @@ module.exports = function(){
 
     router.put('/comment/:rostercommentID', function(req, res){
         var mysql = req.app.get('mysql');
-        var sql = "UPDATE sbr_roster_comment SET comment=?, user=?, roster=? WHERE id=?";
+        var sql = "UPDATE sbr_roster_comment SET sbr_roster_comment.comment=?, sbr_roster_comment.roster=? WHERE sbr_roster_comment.id=?";
 
-        var inserts = [req.body.comment, req.body.user, req.body.roster, req.params.rostercommentID];
+        var roster;
+
+        if (req.body.roster === "null"){
+            roster = null
+        }else{
+            roster = req.body.roster;
+        }
+
+        console.log("HERE!!!");
+
+        var inserts = [req.body.comment, roster, req.params.rostercommentID];
+
+        console.log(inserts);
+
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error));
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                //console.log("UMM HELLO??????");
+                console.log("UMM HELLO??????");
                 // res.redirect('/roster');
                 res.status(200);
                 res.end();
@@ -207,7 +209,15 @@ module.exports = function(){
 
         var mysql = req.app.get('mysql');
         var sql = "INSERT INTO sbr_roster_comment (comment, user, roster) VALUES (?,?,?)";
-        var inserts = [req.body.comment, req.body.user, req.body.roster];
+        var roster;
+
+        if (req.body.roster === "null"){
+            roster = null
+        }else{
+            roster = req.body.roster;
+        }
+
+        var inserts = [req.body.comment, req.body.user, roster];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error));
@@ -223,15 +233,15 @@ module.exports = function(){
     router.post('/character', function(req, res){
 
         var mysql = req.app.get('mysql');
-        var sql = "INSERT INTO sbr_roster_character ( roster, character, ord_num) VALUES (?,?,?)";
-        var inserts = [req.body.comment, req.body.user, req.body.roster];
+        var sql = "INSERT INTO `sbr_roster_character` ( `roster`, `character`, `ord_num`) VALUES (?,?,?)";
+        var inserts = [req.body.roster, req.body.character, req.body.ord_num];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error));
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                res.redirect('/roster');
+                res.redirect('/roster/character');
             }
         });
 
@@ -258,8 +268,9 @@ module.exports = function(){
     });
 
     router.delete('/character/:rosterID/:characterID', function(req, res){
+
         var mysql = req.app.get('mysql');
-        var sql = "DELETE FROM sbr_roster_character WHERE roster = ? AND character = ?";
+        var sql = "DELETE FROM sbr_roster_character WHERE sbr_roster_character.roster = ? AND sbr_roster_character.character = ?";
         var inserts = [req.params.rosterID, req.params.characterID];
 
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
