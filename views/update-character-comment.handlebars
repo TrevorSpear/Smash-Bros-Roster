@@ -13,7 +13,12 @@
         <br>
 
         Character: {{sbr_character_comment.name}}
-        <input type="hidden" name="character" value="{{sbr_character_comment.characterID}}">
+        <select name="character">
+            <option value="null">NULL</option>
+            {{#each sbr_character}}
+                <option value="{{id}}">{{name}}</option>
+            {{/each}}
+        </select><br>
 
         <br>
 

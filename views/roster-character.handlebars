@@ -6,19 +6,24 @@
 <h3> Add a Character to a Roster </h3>
     <form id="add_character_roster" action="/roster/character" method="post" class="well">
     Roster:
-        <select name='id'>
+        <select name='roster'>
             {{#each sbr_roster}}
               <option value='{{id}}'>{{name}}</option>
             {{/each}}
         </select>
     <br>
-    Character:<br>
-        <select multiple name="character" style="margin-left: 7%">
+    Character:
+        <select name="character">
             {{#each sbr_character}}
                 <option value="{{id}}">{{name}}</option>
             {{/each}}
         </select><br>
-    <input type="button" value="Submit">
+    Order number:
+        <input name="ord_num" type="number" value="0" min="0">
+
+        <br>
+
+    <input type="submit" value="Submit">
     </form>
 </div>
 <br/>
