@@ -2,41 +2,6 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 
-    function getPlanets(res, mysql, context, complete){
-        mysql.pool.query("SELECT planet_id as id, name FROM bsg_planets", function(error, results, fields){
-            if(error){
-                res.write(JSON.stringify(error));
-                res.end();
-            }
-            context.planets  = results;
-            complete();
-        });
-    }
-
-    function getUser(res, mysql, context, complete){
-        mysql.pool.query("SELECT bsg_people.character_id as id, fname, lname, bsg_planets.name AS homeworld, age FROM bsg_people INNER JOIN bsg_planets ON homeworld = bsg_planets.planet_id", function(error, results, fields){
-            if(error){
-                res.write(JSON.stringify(error));
-                res.end();
-            }
-            context.people = results;
-            complete();
-        });
-    }
-
-    function getPerson(res, mysql, context, id, complete){
-        var sql = "SELECT character_id as id, fname, lname, homeworld, age FROM bsg_people WHERE character_id = ?";
-        var inserts = [id];
-        mysql.pool.query(sql, inserts, function(error, results, fields){
-            if(error){
-                res.write(JSON.stringify(error));
-                res.end();
-            }
-            context.person = results[0];
-            complete();
-        });
-    }
-
     function getFilteredCharacters(res, mysql, context, userId, complete){
         
         var sql = "SELECT sbr_character.name, sbr_character.id, sbr_character.description, sbr_character.moves, sbr_character.picture, sbr_character.rating, sbr_character.number_of_ratings, sbr_users.username AS username ";
@@ -115,11 +80,6 @@ module.exports = function(){
     router.get('/', function(req, res){
         populateCharacterPage(req, res, null);
     });
-
-
-
-
-
 
     router.get('/comment/:charactercommentID', function(req, res){
         const charactercommentID = parseInt(req.params.charactercommentID);
