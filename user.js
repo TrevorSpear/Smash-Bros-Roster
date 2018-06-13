@@ -27,7 +27,6 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
         context.jsscripts = ["update.js"];
         mysql.pool.query('SELECT * FROM sbr_users WHERE id="' + userID + '"', function(err, rows, fields) {
-
             if (err) {
                 res.render('500');
 
@@ -39,16 +38,22 @@ module.exports = function(){
         });
     });
 
+    function hashFunction(input) {
+        var hash = 0,
+            i, chr;
+        if (input.length === 0) return hash;
+        for (i = 0; i < input.length; i++) {
+            chr = input.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    };
+
 
     /* Adds a person, redirects to the people page after adding */
     router.post('/', function(req, res){
-
-        const password = parseInt(req.params.password);
-
-        var min = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
-        var max = 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
-
-        const password_hash = Math.random() * (max - min) + min;
+        var password_hash = hashFunction(req.body.password);
         var context = {};
 
 
@@ -71,9 +76,10 @@ module.exports = function(){
     /* The URI that update data is sent to in order to update a person */
     router.put('/:userID', function(req, res){
         var mysql = req.app.get('mysql');
+        var password_hash = hashFunction(req.body.password);
 
-        var sql = "UPDATE sbr_users SET username=?, email=?, first_name=?, last_name=? WHERE id=?";
-        var inserts = [req.body.username, req.body.email, req.body.first_name, req.body.last_name, req.params.userID];
+        var sql = "UPDATE sbr_users SET username=?, email=?, first_name=?, last_name=?, password_hash=? WHERE id=?";
+        var inserts = [req.body.username, req.body.email, req.body.first_name, req.body.last_name, password_hash, req.params.userID];
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(error);
