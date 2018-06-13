@@ -93,8 +93,6 @@ module.exports = function(){
             } else {
                 context.sbr_roster_character = rows[0];
 
-                console.log(rows);
-
                 mysql.pool.query('SELECT * FROM sbr_character', function (err, rows, fields) {
 
                     if (err) {
@@ -129,8 +127,6 @@ module.exports = function(){
 
             } else {
                 context.sbr_roster_comment = rows[0];
-
-                console.log(rows);
 
                 mysql.pool.query('SELECT * FROM sbr_roster', function (err, rows, fields) {
 
@@ -179,6 +175,7 @@ module.exports = function(){
                         var sql = "SELECT sbr_roster_character.ord_num AS ord_num, sbr_roster_character.character AS characterID, sbr_roster_character.roster AS rosterID, sbr_character.name AS character_name, sbr_roster.name AS roster_name FROM sbr_roster_character ";
                         sql += "INNER JOIN sbr_roster ON sbr_roster_character.roster = sbr_roster.id ";
                         sql += "INNER JOIN sbr_character ON sbr_roster_character.character = sbr_character.id ";
+                        sql += "ORDER BY sbr_roster_character.roster, sbr_roster_character.ord_num ASC ";
 
                         mysql.pool.query(sql, function(err, rows, fields) {
 
@@ -210,8 +207,6 @@ module.exports = function(){
 
         var inserts = [req.body.comment, roster, req.params.rostercommentID];
 
-        console.log(inserts);
-
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){
                 console.log(JSON.stringify(error));
@@ -229,8 +224,6 @@ module.exports = function(){
         var mysql = req.app.get('mysql');
         var sql = "UPDATE sbr_roster_character SET sbr_roster_character.character = ? WHERE sbr_roster_character.roster = ? AND sbr_roster_character.character = ?";
         var inserts = [req.body.character, req.params.rosterID, req.params.characterID];
-
-        console.log(inserts);
 
         sql = mysql.pool.query(sql,inserts,function(error, results, fields){
             if(error){

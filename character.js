@@ -44,9 +44,7 @@ module.exports = function(){
         sql += "INNER JOIN sbr_users ON sbr_users.id = sbr_character.user ";
         sql += "WHERE sbr_character.user = ?";
         var inserts = [userId];
-        console.log(inserts);
         mysql.pool.query(sql, inserts, function(error, rows, fields){
-            console.log(rows);
             if(error){
                 res.write(JSON.stringify(error));
                 res.status(400);
