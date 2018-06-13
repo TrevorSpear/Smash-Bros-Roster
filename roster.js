@@ -67,6 +67,51 @@ module.exports = function(){
         });
     });
 
+    router.get('/character/:rosterID/:characterID', function(req, res){
+        const rosterID = parseInt(req.params.rosterID);
+        const characterID = parseInt(req.params.characterID);
+
+        var context = {};
+        var mysql = req.app.get('mysql');
+        var sql = "";
+        context.jsscripts = ["delete.js", "update.js"];
+
+        sql += "SELECT sbr_roster_character.roster, sbr_roster_character.character, sbr_roster.name AS rosterName, sbr_character.name AS characterName, sbr_users.username, sbr_users.id ";
+        sql += "FROM sbr_roster_character ";
+        sql += "INNER JOIN sbr_roster ON sbr_roster.id = sbr_roster_character.roster ";
+        sql += "INNER JOIN sbr_character ON sbr_character.id = sbr_roster_character.character ";
+        sql += "INNER JOIN sbr_users ON sbr_users.id = sbr_roster.user ";
+        sql += "WHERE sbr_roster_character.roster = ? AND sbr_roster_character.character = ? ";
+
+        mysql.pool.query(sql, [rosterID, characterID], function(err, rows, fields) {
+
+            if (err) {
+                console.log(JSON.stringify(err));
+                res.write(JSON.stringify(err));
+                res.end();
+
+            } else {
+                context.sbr_roster_character = rows[0];
+
+                console.log(rows);
+
+                mysql.pool.query('SELECT * FROM sbr_character', function (err, rows, fields) {
+
+                    if (err) {
+                        console.log(JSON.stringify(err));
+                        res.write(JSON.stringify(err));
+                        res.end();
+
+                    } else {
+                        context.sbr_character = rows;
+
+                        res.render('update-roster-character', context);
+                    }
+                });
+            }
+        });
+    });
+
 
     router.get('/comment/:rostercommentID', function(req, res){
         const rostercommentID = parseInt(req.params.rostercommentID);
@@ -163,8 +208,6 @@ module.exports = function(){
             roster = req.body.roster;
         }
 
-        console.log("HERE!!!");
-
         var inserts = [req.body.comment, roster, req.params.rostercommentID];
 
         console.log(inserts);
@@ -175,7 +218,26 @@ module.exports = function(){
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                console.log("UMM HELLO??????");
+                // res.redirect('/roster');
+                res.status(200);
+                res.end();
+            }
+        });
+    });
+
+    router.put('/character/:rosterID/:characterID', function(req, res){
+        var mysql = req.app.get('mysql');
+        var sql = "UPDATE sbr_roster_character SET sbr_roster_character.character = ? WHERE sbr_roster_character.roster = ? AND sbr_roster_character.character = ?";
+        var inserts = [req.body.character, req.params.rosterID, req.params.characterID];
+
+        console.log(inserts);
+
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(JSON.stringify(error));
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
                 // res.redirect('/roster');
                 res.status(200);
                 res.end();

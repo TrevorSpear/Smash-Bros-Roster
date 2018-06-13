@@ -61,22 +61,20 @@ function updateCharacterComment(charactercommentID){
         data: $('#update-character-comment').serialize(),
         success: function(result){
             console.log("success!");
-            window.location.replace("./");
+            window.location.replace("./character");
         }
     });
-
-    window.location.replace("./");
 
 }
 
 
-function updateRosterCharacter(rostercharacterID){
+function updateRosterCharacter(rosterID, characterID){
     $.ajax({
-        url: '/roster/character/' + rostercharacterID,
+        url: '/roster/character/' + rosterID + '/' + characterID,
         type: 'PUT',
         data: $('#update-roster-character').serialize(),
         success: function(result){
-            window.location.replace("./");
+            window.location.replace("./roster/character");
         }
     })
 }

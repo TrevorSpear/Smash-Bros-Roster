@@ -1,24 +1,19 @@
 <html>
 <h3>Update Roster-Character:</h3>
-<form id="update-roster-character" action="/roster/comment" method="put">
-    User: {{sbr_roster_comment.username}}
-    <input type="hidden" name="user" value="{{sbr_roster_comment.userID}}">
+<form id="update-roster-character" action="/roster/character" method="put">
+    Roster: {{sbr_roster_character.rosterName}}
+    <input type="hidden" name="roster" value="{{sbr_roster_character.rosterID}}">
 
     <br>
 
-    Comment: <input type="text" name="comment" value="{{sbr_roster_comment.comment}}">
-
-    <br>
-
-    Roster: {{sbr_roster_comment.name}}
-    <select name="roster">
-        <option value="null">NULL</option>
-        {{#each sbr_roster}}
+    Character: {{sbr_roster_character.characterName}}
+    <select name="character">
+        {{#each sbr_character}}
             <option value="{{id}}">{{name}}</option>
         {{/each}}
     </select><br>
 
-    <button onclick="updateRosterComment({{sbr_roster_comment.commentID}})">Update</button>
+    <button onclick="updateRosterCharacter({{sbr_roster_character.roster}}, {{sbr_roster_character.character}})">Update</button>
 </form>
 
 

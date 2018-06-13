@@ -1,7 +1,7 @@
 <html>
 
     <h3>Update comment:</h3>
-    <form id="update-character-comment">
+    <form id="update-character-comment" action="/character/comment" method="put">
 
         User: {{sbr_character_comment.username}}
         <input type="hidden" name="user" value="{{sbr_character_comment.userID}}">
