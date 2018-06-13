@@ -37,16 +37,33 @@ module.exports = function(){
         });
     }
 
-    /*All characters + users*/
+    function getFilteredCharacters(res, mysql, context, userId, complete){
+        
+        var sql = "SELECT sbr_character.name, sbr_character.id, sbr_character.description, sbr_character.moves, sbr_character.picture, sbr_character.rating, sbr_character.number_of_ratings, sbr_users.username AS username ";
+        sql += "FROM sbr_character ";
+        sql += "INNER JOIN sbr_users ON sbr_users.id = sbr_character.user ";
+        sql += "WHERE sbr_character.user = ?";
+        var inserts = [userId];
+        console.log(inserts);
+        mysql.pool.query(sql, inserts, function(error, rows, fields){
+            console.log(rows);
+            if(error){
+                res.write(JSON.stringify(error));
+                res.status(400);
+                res.end();
+            }
+            context.filteredCharacters = rows;
+            complete();
+        });
+    }
 
-    router.get('/', function(req, res){
+    function populateCharacterPage(req, res, userId){
         var callbackCount = 0;
         var context = {};
-        context.jsscripts = ["delete.js", "update.js"];
+        context.jsscripts = ["delete.js", "update.js", "filterCharacters.js"];
         var mysql = req.app.get('mysql');
         var sql;
         mysql.pool.query('SELECT * FROM sbr_users', function(err, rows, fields) {
-
             if (err) {
                 res.render('500');
 
@@ -78,13 +95,27 @@ module.exports = function(){
 
                             } else {
                                 context.sbr_character_comment = rows;
-                                res.render('character', context);
+
+                                if (userId === null){
+                                    context.filteredCharacters = context.sbr_character;
+                                    res.render('character', context);
+                                }else{
+                                    getFilteredCharacters(res, mysql, context, userId, function(){
+                                        res.render('character', context);
+                                    });
+                                }
                             }
                         });
                     }
                 });
             }
         });
+    }
+
+    /*All characters + users*/
+
+    router.get('/', function(req, res){
+        populateCharacterPage(req, res, null);
     });
 
 
@@ -113,8 +144,6 @@ module.exports = function(){
 
             } else {
                 context.sbr_character_comment = rows[0];
-
-                console.log(context.sbr_character_comment);
 
                 mysql.pool.query("SELECT * FROM sbr_character", function (err, rows, fields) {
 
@@ -250,6 +279,11 @@ module.exports = function(){
                 res.status(202).end();
             }
         })
+    });
+
+    /* Filter used to obtain a list of characters created by a given user */
+    router.get('/filter/:userId', function(req, res){
+       populateCharacterPage(req, res, req.params.userId);
     });
 
 

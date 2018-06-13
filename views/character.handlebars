@@ -20,6 +20,18 @@
     <input class="btn" style="padding: 3px" type="submit" value="Submit">
 </form>
 
+<h3>Filter By User</h3>
+<form id="filterCharacter" action="" method="" class="well">
+    User:
+    <select id='characterFilter' name="user">
+        {{#each sbr_users}}
+            <option value="{{id}}">{{username}}</option>
+        {{/each}}
+    </select><br>
+
+    <input class="btn" style="padding: 3px" value="Filter" onclick="filterCharactersByUser()">
+</form>
+
 <h3>Current Character:</h3>
 <table class="table table-bordered well">
     <thead>
@@ -33,7 +45,7 @@
     <!--<th></th>-->
     </thead>
     <tbody>
-    {{#each sbr_character}}
+    {{#each filteredCharacters}}
         <tr>
             <td>{{username}}</td>
             <td>{{name}}</td>
@@ -95,7 +107,6 @@
     {{/each}}
     </tbody>
 </table>
-
 
 
 </html>
